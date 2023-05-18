@@ -1,10 +1,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const { redirect } = require("statuses");
 const app = express();
 
-var items =["Buy Food","Cook Food","Eat Food"];
+let items =["Buy Food","Cook Food","Eat Food"];
+let works =[];
 
 app.use(bodyParser.urlencoded({extended:true}));
+app.use(express.static("public"));
 
 app.set('view engine', 'ejs');
 
@@ -19,23 +22,50 @@ app.get("/",function(req,res){
 /*     https://stackoverflow.com/questions/3552461/how-do-i-format-a-date-in-javascript
  */    
     
-    var options = { weekday: 'long', month: 'long', day: 'numeric' };
-    var today = new Date();
-    var day = today.toLocaleDateString("en-US", options);
+    let options = { weekday: 'long', month: 'long', day: 'numeric' };
+    let today = new Date();
+    let day = today.toLocaleDateString("en-US", options);
 
 
-    res.render("index",{kindOfDay : day , kindOfInput : items})
+    res.render("index",{listTitle : day , kindOfInput : items})
 });
 
 app.post("/",function(req,res){
 
 
-    var input = req.body.input ;
-    items.push(input);
-    res.redirect("/");
+    let input = req.body.input ;
+
+    let valueButton = req.body.button ; 
+    console.log(valueButton);
+    if(valueButton === "Work")
+    {
+        works.push(input);
+        res.redirect("/work"); 
+    }
+    else {
+        items.push(input);
+        res.redirect("/");
+    }
+
 
    // res.send(input);
 
 })
 
+app.get("/work",function(req,res){
+    res.render("index",{listTitle : "Work" , kindOfInput : works})
+});
 
+/* app.post("/work",function(req,res){
+
+    let itemWork = req.body.input;
+    works.push(itemWork);
+    res.redirect("/work");
+
+}); */
+
+
+app.get("/about",function(req,res){
+
+    res.render("about");
+});
