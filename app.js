@@ -1,10 +1,11 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const { redirect } = require("statuses");
+const date = require(__dirname+"/date.js")
 const app = express();
 
-let items =["Buy Food","Cook Food","Eat Food"];
-let works =[];
+const items =["Buy Food","Cook Food","Eat Food"];
+const works =[];
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
@@ -22,11 +23,10 @@ app.get("/",function(req,res){
 /*     https://stackoverflow.com/questions/3552461/how-do-i-format-a-date-in-javascript
  */    
     
-    let options = { weekday: 'long', month: 'long', day: 'numeric' };
-    let today = new Date();
-    let day = today.toLocaleDateString("en-US", options);
+/*     let options = { weekday: 'long', month: 'long', day: 'numeric' };
+    let today = new Date(); */
 
-
+    let day = date.getDate(); /* use date.getDay() if you want to dispaly just the day not thye entire date*/ 
     res.render("index",{listTitle : day , kindOfInput : items})
 });
 
